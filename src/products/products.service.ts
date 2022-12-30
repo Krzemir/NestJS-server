@@ -13,12 +13,21 @@ export class ProductsService {
   }
 
   public removeById(id: Product['id']): void {
-    db.products.filter((product) => product.id !== id);
+    db.products = db.products.filter((product) => product.id !== id);
   }
 
   public create(productData: Omit<Product, 'id'>): Product {
     const newProduct = { ...productData, id: uuidv4() };
     db.products.push(newProduct);
     return newProduct;
+  }
+
+  public updateById(id: Product['id'], productData: Omit<Product, 'id'>): void {
+    db.products = db.products.map((product) => {
+      if (product.id === id) {
+        return { ...product, ...productData };
+      }
+      return product;
+    });
   }
 }
