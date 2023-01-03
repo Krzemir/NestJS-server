@@ -1,11 +1,11 @@
 import { Controller, Get, Put, Param, ParseUUIDPipe, NotFoundException, Delete, Post, Body } from '@nestjs/common';
-import { CreateOrderDTO } from 'src/products/dtos/create-order.dto';
-import { UpdateOrderDTO } from 'src/products/dtos/update-order.dto';
+import { CreateOrderDTO } from 'src/orders/dtos/create-order.dto';
+import { UpdateOrderDTO } from 'src/orders/dtos/update-order.dto';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private ordersService: OrdersService) {}
+  constructor(private ordersService: OrdersService) { }
 
   @Get('/')
   getAll(): any {
@@ -42,9 +42,9 @@ export class OrdersController {
   ) {
     if (!(await this.ordersService.getById(id)))
       throw new NotFoundException('Order not found');
-  
+
     await this.ordersService.updateById(id, productData);
     return { success: true };
   }
-  
+
 }

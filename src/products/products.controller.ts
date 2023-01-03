@@ -7,12 +7,24 @@ import { UpdateProductDTO } from './dtos/update-product.dto';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {
-    this.productsService = productsService
+    this.productsService = productsService;
   }
 
   @Get('/')
   public getAny(): any {
-    return this.productsService.getAll()
+    return this.productsService.getAll();
+  }
+
+  @Get('/extended')
+  getAllExtended(): any {
+    return this.productsService.getAllExtended();
+  }
+
+  @Get('/extended/:id')
+  async getExtendedById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const prod = await this.productsService.getExtendedById(id);
+    if (!prod) throw new NotFoundException('Product not found');
+    return prod;
   }
 
   @Get('/:id')
@@ -32,17 +44,17 @@ export class ProductsController {
 
   @Post('/')
   create(@Body() productData: CreateProductDTO) {
-    return this.productsService.create(productData)
+    return this.productsService.create(productData);
   }
 
   @Put('/:id')
   public async updateById(
-    @Param('id', new ParseUUIDPipe()) id: string, 
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() productData: UpdateProductDTO
-    ) {
-      if (await !this.productsService.getById(id)) 
-        throw new NotFoundException('Product not found');
-      await this.productsService.updateById(id, productData);
-      return { success: true }
-  }    
+  ) {
+    if (await !this.productsService.getById(id))
+      throw new NotFoundException('Product not found');
+    await this.productsService.updateById(id, productData);
+    return { success: true };
+  }
 }
